@@ -1,0 +1,56 @@
+:local(.timer) {
+  padding: 20px;
+  background-color: #625b5b;
+  border: 2px solid #4aac26;
+  border-radius: 10px;
+  text-align: center;
+}
+
+:local(.timerDisplay) {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}
+
+:local(.btn) {
+  padding: 10px;
+  width: 50px;
+  background-color: #2d2525;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+:local(.btn):active {
+  transform: translateY(2px);
+}
+
+:local(.btn):hover {
+  background-color: #4a4040;
+}
+
+:local(.btn):not(:first-of-type) {
+  margin-left: 18px;
+}
+
+:local(.btn.controlBtn) {
+  width: 50px;
+  padding: 0;
+  margin: 0;
+}
+
+:local(.timeChanger) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+:local(.timeChanger):not(:first-child) {
+  margin-left: 10px;
+}
