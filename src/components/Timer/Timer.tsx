@@ -8,7 +8,7 @@ import { hour, minute } from '../../Constants/time.ts'
 import styles from './Timer.module.css'
 
 const Timer: FC = () => {
-  const [seconds, setSeconds] = useState<number>(0)
+  const [time, setTime] = useState<number>(0)
   const [isActive, setIsActive] = useState<boolean>(false)
 
   const handleToggleStart = () => {
@@ -16,23 +16,25 @@ const Timer: FC = () => {
   }
 
   const handleReset = () => {
-    setSeconds(0)
+    setTime(0)
   }
 
   useEffect(() => {
       let intervalId: number | undefined;
 
       if (isActive) {
-        intervalId = setInterval(() => setSeconds(seconds + 1), 1000)
+        intervalId = setInterval(() => setTime(time + 1), 1000)
       }
 
       return () => clearInterval(intervalId)
-    }, [isActive, seconds]
+    }, [isActive, time]
   )
 
-  const hours = Math.floor(seconds / hour)
+  const hours = Math.floor(time / hour)
 
-  const minutes = Math.floor((seconds % hour) / minute)
+  const minutes = Math.floor((time % hour) / minute)
+
+  const seconds = Math.floor(time % minute)
 
   return <div className={styles.timer}>
     <div className={styles.timerDisplay}>
