@@ -1,13 +1,11 @@
 import { FC, useEffect, useState } from 'react'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faArrowRotateRight } from '@fortawesome/free-solid-svg-icons'
-
 import TimeUnitChanger from './parts/TimeUnitChanger.tsx'
 import TimerButton from './parts/TimerButton.tsx'
+import { hour, minute, second } from '../../constants/time.ts'
 
 import styles from './Timer.module.css'
-import { hour, minute, second } from '../../constants/time.ts'
 
 const Timer: FC = () => {
   const [seconds, setSeconds] = useState<number>(0)
@@ -24,20 +22,12 @@ const Timer: FC = () => {
 
   const date: Date = new Date(seconds * 1000)
 
-  const time = `${
-    String(date.getUTCHours()).padStart(2, '0')
-  }:${
-    String(date.getUTCMinutes()).padStart(2, '0')
-  }:${
-    String(date.getUTCSeconds()).padStart(2, '0')
-  }`
-
   const handleIncreaseHours = () => {
-    setSeconds((prevHours )=> prevHours + hour)
+    setSeconds((prevHours) => prevHours + hour)
   }
 
   const handleDecreaseHours = () => {
-    setSeconds((prevHours )=> prevHours - hour)
+    setSeconds((prevHours) => prevHours - hour)
   }
 
   const handleIncreaseMinutes = () => {
@@ -75,24 +65,24 @@ const Timer: FC = () => {
   )
 
   return <div className={styles.timer}>
-    <div className={styles.timerChanger}>
-      <TimeUnitChanger onIncreaseHours={handleIncreaseHours}
-                       onIncreaseMinutes={handleIncreaseMinutes}
-                       onIncreaseSeconds={handleIncreaseSeconds}
-                       onDecreaseHours={handleDecreaseHours}
-                       onDecreaseMinutes={handleDecreaseMinutes}
-                       onDecreaseSeconds={handleDecreaseSeconds}
-                       time={time} />
+    <div className={styles.timerDisplay}>
+      <TimeUnitChanger onIncrease={handleIncreaseHours}
+                       onDecrease={handleDecreaseHours}
+                       time={String(date.getUTCHours()).padStart(2, '0')} />
+
+      <TimeUnitChanger onIncrease={handleIncreaseMinutes}
+                       onDecrease={handleDecreaseMinutes}
+                       time={String(date.getUTCMinutes()).padStart(2, '0')} />
+
+      <TimeUnitChanger onIncrease={handleIncreaseSeconds}
+                       onDecrease={handleDecreaseSeconds}
+                       time={String(date.getUTCSeconds()).padStart(2, '0')} />
     </div>
 
     <div className={styles.timerController}>
-      <TimerButton onClick={handleToggleStart}>
-        <FontAwesomeIcon icon={isActive ? faPause : faPlay} size="xl" style={{ color: '#4aac26' }} />
-      </TimerButton>
+      <TimerButton icon={isActive ? faPause : faPlay} onClick={handleToggleStart} />
 
-      <TimerButton onClick={handleReset}>
-        <FontAwesomeIcon icon={faArrowRotateRight} size="xl" style={{ color: '#4aac26' }} />
-      </TimerButton>
+      <TimerButton icon={faArrowRotateRight} onClick={handleReset} />
     </div>
   </div>
 }

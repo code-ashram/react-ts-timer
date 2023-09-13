@@ -6,7 +6,7 @@
   text-align: center;
 }
 
-:local(.timerDisplay) {
+:local(.timerTime) {
   font-weight: bold;
   font-size: 40px;
   color: aliceblue;
@@ -16,13 +16,16 @@
   margin-top: 20px;
 }
 
-:local(.timerChanger) {
+:local(.timerDisplay) {
   display: flex;
-  justify-content: space-between;
 }
 
-:local(.timerChanger .btn.controlBtn:not(:last-child))  {
-  margin-right: 10px;
+:local(.timerUnitChanger) {
+  display: block;
+}
+
+:local(.timerDisplay .timerUnitChanger):not(:first-of-type) {
+  margin-left: 10px;
 }
 
 :local(.btn) {
@@ -48,7 +51,7 @@
 }
 
 :local(.btn.controlBtn) {
-  width: 40px;
+  width: 50px;
   padding: 0;
   margin: 0;
 }
