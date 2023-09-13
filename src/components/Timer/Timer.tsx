@@ -3,13 +3,12 @@ import { FC, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faArrowRotateRight, faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import cn from 'classnames'
+import Time from '../../Models/Time.ts'
 
 import styles from './Timer.module.css'
 
 const Timer: FC = () => {
-  const [seconds, setSeconds] = useState<number>(0)
-  const [minutes, setMinutes] = useState<number>(0)
-  const [hours, setHours] = useState<number>(0)
+  const [time, setTime] = useState<Time>({seconds: 0, minutes: 0, hours: 0})
   const [isActive, setIsActive] = useState<boolean>(false)
 
   const handleToggleStart = () => {
@@ -18,80 +17,78 @@ const Timer: FC = () => {
 
   const handleReset = () => {
     setIsActive(false)
-    setSeconds(0)
-    setMinutes(0)
-    setHours(0)
+    setTime((prevTime) => ({...prevTime, seconds: 0, minutes: 0, hours: 0}))
   }
 
   const handleIncreaseSeconds = () => {
-    setSeconds((prevSecond) => {
-      if (prevSecond >= 59) {
-        setSeconds(0)
-      } else if (prevSecond < 0) {
-        setSeconds(59)
+    setTime((prevTime) => {
+      if (prevTime.seconds >= 59) {
+        setTime({...prevTime, seconds: 0})
+      } else if (prevTime.seconds < 0) {
+        setTime({...prevTime, seconds: 59})
       }
 
-      return prevSecond + 1
+      return {...prevTime, seconds: prevTime.seconds + 1}
     })
   }
 
   const handleDecreaseSeconds = () => {
-    setSeconds((prevSecond) => {
-      if (prevSecond <= 0) {
-        setSeconds(59)
-      } else if (prevSecond > 59) {
-        setSeconds(0)
+    setTime((prevTime) => {
+      if (prevTime.seconds <= 0) {
+        setTime({...prevTime, seconds: 59})
+      } else if (prevTime.seconds > 59) {
+        setTime({...prevTime, seconds: 0})
       }
 
-      return prevSecond - 1
+      return {...prevTime, seconds: prevTime.seconds - 1}
     })
   }
 
   const handleIncreaseMinutes = () => {
-    setMinutes((prevMinute) => {
-      if (prevMinute >= 59) {
-        setMinutes(0)
-      } else if (prevMinute < 0) {
-        setMinutes(59)
+    setTime((prevTime) => {
+      if (prevTime.minutes >= 59) {
+        setTime({...prevTime, minutes: 0})
+      } else if (prevTime.minutes < 0) {
+        setTime({...prevTime, minutes: 59})
       }
 
-      return prevMinute + 1
+      return {...prevTime, minutes: prevTime.minutes + 1}
     })
   }
 
   const handleDecreaseMinutes = () => {
-    setMinutes((prevMinute) => {
-      if (prevMinute <= 0) {
-        setMinutes(59)
-      } else if (prevMinute > 59) {
-        setMinutes(0)
+    setTime((prevTime) => {
+      if (prevTime.minutes <= 0) {
+        setTime({...prevTime, minutes: 59})
+      } else if (prevTime.minutes > 59) {
+        setTime({...prevTime, minutes: 0})
       }
 
-      return prevMinute - 1
+      return {...prevTime, minutes: prevTime.minutes - 1}
     })
   }
 
   const handleIncreaseHours = () => {
-    setHours((prevHours) => {
-      if (prevHours >= 23) {
-        setHours(0)
-      } else if (prevHours < 0) {
-        setHours(23)
+    setTime((prevTime) => {
+      if (prevTime.hours >= 23) {
+        setTime({...prevTime, hours: 0})
+      } else if (prevTime.hours < 0) {
+        setTime({...prevTime, hours: 23})
       }
 
-      return prevHours + 1
+      return {...prevTime, hours: prevTime.hours + 1}
     })
   }
 
   const handleDecreaseHours = () => {
-    setHours((prevHours) => {
-      if (prevHours <= 0) {
-        setHours(23)
-      } else if (prevHours > 23) {
-        setHours(0)
+    setTime((prevTime) => {
+      if (prevTime.hours <= 0) {
+        setTime({...prevTime, hours: 23})
+      } else if (prevTime.hours > 23) {
+        setTime({...prevTime, hours: 0})
       }
 
-      return prevHours - 1
+      return {...prevTime, hours: prevTime.hours - 1}
     })
   }
 
@@ -100,18 +97,15 @@ const Timer: FC = () => {
 
       if (isActive) {
         intervalId = setInterval(() => {
-          if (seconds > 0) {
-            setSeconds((prevSeconds) => prevSeconds - 1)
-          } else if (minutes > 0) {
-            setMinutes((prevMinutes) => prevMinutes - 1)
-            setSeconds(59)
-          } else if (hours > 0) {
-            setHours((prevHours) => prevHours - 1)
-            setMinutes(59)
-            setSeconds(59)
+          if (time.seconds > 0) {
+            setTime((prevTime) => ({...prevTime, seconds: prevTime.seconds - 1}))
+          } else if (time.minutes > 0) {
+            setTime((prevTime) => ({...prevTime, seconds: 59, minutes: prevTime.minutes - 1}))
+          } else if (time.hours > 0) {
+            setTime((prevTime) => ({...prevTime, seconds: 59, minutes: 59, hours: prevTime.hours - 1}))
           }
 
-          if (seconds === 0 && minutes === 0 && hours === 0) {
+          if (time.seconds === 0 && time.minutes === 0 && time.hours === 0) {
             setIsActive(false)
             alert('Time is over!')
           }
@@ -121,7 +115,7 @@ const Timer: FC = () => {
 
 
       return () => clearInterval(intervalId)
-    }, [isActive, seconds, minutes, hours]
+    }, [isActive, time]
   )
 
   return <div className={styles.timer}>
@@ -132,7 +126,7 @@ const Timer: FC = () => {
           <FontAwesomeIcon icon={faCaretUp} size="lg" style={{ color: '#4aac26' }} />
         </button>
 
-        <div>{hours.toString().padStart(2, '0')}</div>
+        <div>{time.hours.toString().padStart(2, '0')}</div>
 
         <button className={cn(styles.btn, styles.controlBtn)}
                 onClick={handleDecreaseHours}>
@@ -146,7 +140,7 @@ const Timer: FC = () => {
           <FontAwesomeIcon icon={faCaretUp} size="lg" style={{ color: '#4aac26' }} />
         </button>
 
-        <div>{minutes.toString().padStart(2, '0')}</div>
+        <div>{time.minutes.toString().padStart(2, '0')}</div>
 
         <button className={cn(styles.btn, styles.controlBtn)}
                 onClick={handleDecreaseMinutes}>
@@ -160,7 +154,7 @@ const Timer: FC = () => {
           <FontAwesomeIcon icon={faCaretUp} size="lg" style={{ color: '#4aac26' }} />
         </button>
 
-        <div>{seconds.toString().padStart(2, '0')}</div>
+        <div>{time.seconds.toString().padStart(2, '0')}</div>
 
         <button className={cn(styles.btn, styles.controlBtn)}
                 onClick={handleDecreaseSeconds}>
