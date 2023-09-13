@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faArrowRotateRight } from '@fortawesome/free-solid-svg-icons'
 
 import TimeUnitChanger from './parts/TimeUnitChanger.tsx'
-import Time from '../../models/Time.ts'
-
-import styles from './Timer.module.css'
 import TimerButton from './parts/TimerButton.tsx'
 
+import styles from './Timer.module.css'
+import { hour, minute, second } from '../../constants/time.ts'
+
 const Timer: FC = () => {
-  const [time, setTime] = useState<Time>({ seconds: 0, minutes: 0, hours: 0 })
+  const [seconds, setSeconds] = useState<number>(5)
   const [isActive, setIsActive] = useState<boolean>(false)
 
   const handleToggleStart = () => {
@@ -19,78 +19,33 @@ const Timer: FC = () => {
 
   const handleReset = () => {
     setIsActive(false)
-    setTime((prevTime) => ({ ...prevTime, seconds: 0, minutes: 0, hours: 0 }))
+    setSeconds(0)
   }
 
-  const handleIncreaseSeconds = () => {
-    setTime((prevTime) => {
-      if (prevTime.seconds >= 59) {
-        setTime({ ...prevTime, seconds: 0 })
-      } else if (prevTime.seconds < 0) {
-        setTime({ ...prevTime, seconds: 59 })
-      }
-
-      return { ...prevTime, seconds: prevTime.seconds + 1 }
-    })
-  }
-
-  const handleDecreaseSeconds = () => {
-    setTime((prevTime) => {
-      if (prevTime.seconds <= 0) {
-        setTime({ ...prevTime, seconds: 59 })
-      } else if (prevTime.seconds > 59) {
-        setTime({ ...prevTime, seconds: 0 })
-      }
-
-      return { ...prevTime, seconds: prevTime.seconds - 1 }
-    })
-  }
-
-  const handleIncreaseMinutes = () => {
-    setTime((prevTime) => {
-      if (prevTime.minutes >= 59) {
-        setTime({ ...prevTime, minutes: 0 })
-      } else if (prevTime.minutes < 0) {
-        setTime({ ...prevTime, minutes: 59 })
-      }
-
-      return { ...prevTime, minutes: prevTime.minutes + 1 }
-    })
-  }
-  const handleDecreaseMinutes = () => {
-    setTime((prevTime) => {
-      if (prevTime.minutes <= 0) {
-        setTime({ ...prevTime, minutes: 59 })
-      } else if (prevTime.minutes > 59) {
-        setTime({ ...prevTime, minutes: 0 })
-      }
-
-      return { ...prevTime, minutes: prevTime.minutes - 1 }
-    })
-  }
+  const date: Date = new Date(0, 0, 0, 0, 0, seconds)
 
   const handleIncreaseHours = () => {
-    setTime((prevTime) => {
-      if (prevTime.hours >= 23) {
-        setTime({ ...prevTime, hours: 0 })
-      } else if (prevTime.hours < 0) {
-        setTime({ ...prevTime, hours: 23 })
-      }
-
-      return { ...prevTime, hours: prevTime.hours + 1 }
-    })
+    setSeconds((prevHours )=> prevHours + hour)
   }
 
   const handleDecreaseHours = () => {
-    setTime((prevTime) => {
-      if (prevTime.hours <= 0) {
-        setTime({ ...prevTime, hours: 23 })
-      } else if (prevTime.hours > 23) {
-        setTime({ ...prevTime, hours: 0 })
-      }
+    setSeconds((prevHours )=> prevHours - hour)
+  }
 
-      return { ...prevTime, hours: prevTime.hours - 1 }
-    })
+  const handleIncreaseMinutes = () => {
+    setSeconds((prevMinutes) => prevMinutes + minute)
+  }
+
+  const handleDecreaseMinutes = () => {
+    setSeconds((prevMinutes) => prevMinutes - minute)
+  }
+
+  const handleIncreaseSeconds = () => {
+    setSeconds((prevSeconds) => prevSeconds + second)
+  }
+
+  const handleDecreaseSeconds = () => {
+    setSeconds((prevSeconds) => prevSeconds - second)
   }
 
   useEffect(() => {
@@ -98,15 +53,9 @@ const Timer: FC = () => {
 
       if (isActive) {
         intervalId = setInterval(() => {
-          if (time.seconds > 0) {
-            setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds - 1 }))
-          } else if (time.minutes > 0) {
-            setTime((prevTime) => ({ ...prevTime, seconds: 59, minutes: prevTime.minutes - 1 }))
-          } else if (time.hours > 0) {
-            setTime((prevTime) => ({ ...prevTime, seconds: 59, minutes: 59, hours: prevTime.hours - 1 }))
-          }
+          setSeconds(seconds - 1)
 
-          if (time.seconds === 0 && time.minutes === 0 && time.hours === 0) {
+          if (seconds === 1) {
             setIsActive(false)
             alert('Time is over!')
           }
@@ -114,24 +63,26 @@ const Timer: FC = () => {
       }
 
       return () => clearInterval(intervalId)
-    }, [isActive, time]
+    }, [isActive, seconds]
   )
 
   return <div className={styles.timer}>
-    <div className={styles.timerDisplay}>
-      <TimeUnitChanger onIncrease={handleIncreaseHours} onDecrease={handleDecreaseHours} time={time.hours} />
-
-      <TimeUnitChanger onIncrease={handleIncreaseMinutes} onDecrease={handleDecreaseMinutes} time={time.minutes} />
-
-      <TimeUnitChanger onIncrease={handleIncreaseSeconds} onDecrease={handleDecreaseSeconds} time={time.seconds} />
+    <div className={styles.timerChanger}>
+      <TimeUnitChanger onIncreaseHours={handleIncreaseHours}
+                       onIncreaseMinutes={handleIncreaseMinutes}
+                       onIncreaseSeconds={handleIncreaseSeconds}
+                       onDecreaseHours={handleDecreaseHours}
+                       onDecreaseMinutes={handleDecreaseMinutes}
+                       onDecreaseSeconds={handleDecreaseSeconds}
+                       time={date.toLocaleTimeString()} />
     </div>
 
-    <div className={styles.controlPanel}>
+    <div className={styles.timerController}>
       <TimerButton onClick={handleToggleStart}>
         <FontAwesomeIcon icon={isActive ? faPause : faPlay} size="xl" style={{ color: '#4aac26' }} />
       </TimerButton>
 
-      <TimerButton onClick={handleToggleStart}>
+      <TimerButton onClick={handleReset}>
         <FontAwesomeIcon icon={faArrowRotateRight} size="xl" style={{ color: '#4aac26' }} />
       </TimerButton>
     </div>

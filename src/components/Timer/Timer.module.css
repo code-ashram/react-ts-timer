@@ -7,13 +7,22 @@
 }
 
 :local(.timerDisplay) {
+  font-weight: bold;
+  font-size: 40px;
+  color: aliceblue;
+}
+
+:local(.timerController) {
+  margin-top: 20px;
+}
+
+:local(.timerChanger) {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-  color: white;
+}
+
+:local(.timerChanger .btn.controlBtn:not(:last-child))  {
+  margin-right: 10px;
 }
 
 :local(.btn) {
@@ -39,18 +48,7 @@
 }
 
 :local(.btn.controlBtn) {
-  width: 50px;
+  width: 40px;
   padding: 0;
   margin: 0;
-}
-
-:local(.timeChanger) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-:local(.timeChanger):not(:first-child) {
-  margin-left: 10px;
 }
