@@ -64,27 +64,35 @@ const Timer: FC = () => {
     }, [isActive, seconds]
   )
 
-  return <div className={styles.timer}>
-    <div className={styles.timerDisplay}>
-      <TimeUnitChanger onIncrease={handleIncreaseHours}
-                       onDecrease={handleDecreaseHours}
-                       time={String(date.getUTCHours()).padStart(2, '0')} />
+  return (
+    <div className={styles.timer}>
+      <div className={styles.timerDisplay}>
+        <TimeUnitChanger
+          onIncrease={handleIncreaseHours}
+          onDecrease={handleDecreaseHours}
+          time={String(date.getUTCHours()).padStart(2, '0')}
+        />
 
-      <TimeUnitChanger onIncrease={handleIncreaseMinutes}
-                       onDecrease={handleDecreaseMinutes}
-                       time={String(date.getUTCMinutes()).padStart(2, '0')} />
+        <TimeUnitChanger
+          onIncrease={handleIncreaseMinutes}
+          onDecrease={handleDecreaseMinutes}
+          time={String(date.getUTCMinutes()).padStart(2, '0')}
+        />
 
-      <TimeUnitChanger onIncrease={handleIncreaseSeconds}
-                       onDecrease={handleDecreaseSeconds}
-                       time={String(date.getUTCSeconds()).padStart(2, '0')} />
+        <TimeUnitChanger
+          onIncrease={handleIncreaseSeconds}
+          onDecrease={handleDecreaseSeconds}
+          time={String(date.getUTCSeconds()).padStart(2, '0')}
+        />
+      </div>
+
+      <div className={styles.timerController}>
+        <TimerButton icon={isActive ? faPause : faPlay} onClick={handleToggleStart} />
+
+        <TimerButton icon={faArrowRotateRight} onClick={handleReset} />
+      </div>
     </div>
-
-    <div className={styles.timerController}>
-      <TimerButton icon={isActive ? faPause : faPlay} onClick={handleToggleStart} />
-
-      <TimerButton icon={faArrowRotateRight} onClick={handleReset} />
-    </div>
-  </div>
+  )
 }
 
 export default Timer
