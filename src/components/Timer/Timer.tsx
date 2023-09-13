@@ -10,7 +10,7 @@ import styles from './Timer.module.css'
 import { hour, minute, second } from '../../constants/time.ts'
 
 const Timer: FC = () => {
-  const [seconds, setSeconds] = useState<number>(5)
+  const [seconds, setSeconds] = useState<number>(0)
   const [isActive, setIsActive] = useState<boolean>(false)
 
   const handleToggleStart = () => {
@@ -22,7 +22,15 @@ const Timer: FC = () => {
     setSeconds(0)
   }
 
-  const date: Date = new Date(0, 0, 0, 0, 0, seconds)
+  const date: Date = new Date(seconds * 1000)
+
+  const time = `${
+    String(date.getUTCHours()).padStart(2, '0')
+  }:${
+    String(date.getUTCMinutes()).padStart(2, '0')
+  }:${
+    String(date.getUTCSeconds()).padStart(2, '0')
+  }`
 
   const handleIncreaseHours = () => {
     setSeconds((prevHours )=> prevHours + hour)
@@ -74,7 +82,7 @@ const Timer: FC = () => {
                        onDecreaseHours={handleDecreaseHours}
                        onDecreaseMinutes={handleDecreaseMinutes}
                        onDecreaseSeconds={handleDecreaseSeconds}
-                       time={date.toLocaleTimeString()} />
+                       time={time} />
     </div>
 
     <div className={styles.timerController}>
