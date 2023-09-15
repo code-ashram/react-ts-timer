@@ -46,6 +46,11 @@ const Timer: FC = () => {
     setSeconds((prevSeconds) => prevSeconds - second)
   }
 
+  const showNotification = () => new Notification('New message from Sachinandan', {
+    body: 'Hare Krishna, maharajah!',
+    icon: 'src/img/kishor.jpg'
+  })
+
   useEffect(() => {
       let intervalId: number | undefined
 
@@ -55,7 +60,13 @@ const Timer: FC = () => {
 
           if (seconds === 1) {
             setIsActive(false)
-            alert('Time is over!')
+            if (Notification.permission === "granted") {
+              showNotification()
+            } else if (Notification.permission !== "denied") {
+              Notification.requestPermission().then((permission) => {
+                if (permission === "granted") showNotification()
+              })
+            }
           }
         }, 1000)
       }
