@@ -6,6 +6,7 @@ import TimerButton from './parts/TimerButton.tsx'
 import { hour, minute, second } from '../../constants/time.ts'
 
 import styles from './Timer.module.css'
+import { showNotification } from '../../utils.ts'
 
 const Timer: FC = () => {
   const [seconds, setSeconds] = useState<number>(0)
@@ -46,9 +47,8 @@ const Timer: FC = () => {
     setSeconds((prevSeconds) => prevSeconds - second)
   }
 
-  const showNotification = () => new Notification('New message from Sachinandan', {
-    body: 'Hare Krishna, maharajah!',
-    icon: 'src/img/kishor.jpg'
+  useEffect(() => {
+    if (Notification.permission !== 'granted') Notification.requestPermission().then()
   })
 
   useEffect(() => {
@@ -60,13 +60,7 @@ const Timer: FC = () => {
 
           if (seconds === 1) {
             setIsActive(false)
-            if (Notification.permission === "granted") {
-              showNotification()
-            } else if (Notification.permission !== "denied") {
-              Notification.requestPermission().then((permission) => {
-                if (permission === "granted") showNotification()
-              })
-            }
+            if (Notification.permission === 'granted') showNotification()
           }
         }, 1000)
       }
